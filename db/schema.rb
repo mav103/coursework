@@ -11,10 +11,28 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170501085108) do
+ActiveRecord::Schema.define(version: 20171025192223) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "cards", force: :cascade do |t|
+    t.string   "second_name", limit: 30,  null: false
+    t.string   "first_name",  limit: 30,  null: false
+    t.string   "last_name",   limit: 30,  null: false
+    t.string   "passport",    limit: 30,  null: false
+    t.integer  "insurance",               null: false
+    t.string   "residence",               null: false
+    t.date     "created",                 null: false
+    t.string   "allergy",     limit: 128, null: false
+    t.integer  "cart_number",             null: false
+    t.datetime "created_at",              null: false
+    t.datetime "updated_at",              null: false
+  end
+
+  add_index "cards", ["cart_number"], name: "index_cards_on_cart_number", unique: true, using: :btree
+  add_index "cards", ["insurance"], name: "index_cards_on_insurance", unique: true, using: :btree
+  add_index "cards", ["passport"], name: "index_cards_on_passport", unique: true, using: :btree
 
   create_table "delayed_jobs", force: :cascade do |t|
     t.integer  "priority",   default: 0, null: false
@@ -31,6 +49,18 @@ ActiveRecord::Schema.define(version: 20170501085108) do
   end
 
   add_index "delayed_jobs", ["priority", "run_at"], name: "delayed_jobs_priority", using: :btree
+
+  create_table "results", force: :cascade do |t|
+    t.string   "conclusion",       limit: 128, null: false
+    t.string   "title",            limit: 128, null: false
+    t.date     "rdate",                        null: false
+    t.string   "appointment",      limit: 128, null: false
+    t.string   "causes",           limit: 128, null: false
+    t.string   "first_inspection", limit: 128, null: false
+    t.string   "results",          limit: 128, null: false
+    t.datetime "created_at",                   null: false
+    t.datetime "updated_at",                   null: false
+  end
 
   create_table "role_users", force: :cascade do |t|
     t.integer  "role_id",    null: false
@@ -53,6 +83,22 @@ ActiveRecord::Schema.define(version: 20170501085108) do
 
   add_index "roles", ["info"], name: "index_roles_on_info", unique: true, using: :btree
   add_index "roles", ["name"], name: "index_roles_on_name", unique: true, using: :btree
+
+  create_table "surveys", force: :cascade do |t|
+    t.integer  "result_id",  null: false
+    t.integer  "card_id",    null: false
+    t.integer  "ward_id",    null: false
+    t.string   "cause",      null: false
+    t.date     "entered",    null: false
+    t.date     "ended",      null: false
+    t.string   "epicrisis",  null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  add_index "surveys", ["card_id"], name: "index_surveys_on_card_id", using: :btree
+  add_index "surveys", ["result_id"], name: "index_surveys_on_result_id", using: :btree
+  add_index "surveys", ["ward_id"], name: "index_surveys_on_ward_id", using: :btree
 
   create_table "users", force: :cascade do |t|
     t.string   "email",                                       null: false
@@ -96,6 +142,21 @@ ActiveRecord::Schema.define(version: 20170501085108) do
 
   add_index "versions", ["item_type", "item_id"], name: "index_versions_on_item_type_and_item_id", using: :btree
 
+  create_table "wards", force: :cascade do |t|
+    t.string   "department",                  null: false
+    t.integer  "floor",                       null: false
+    t.integer  "capacity",                    null: false
+    t.integer  "number",                      null: false
+    t.integer  "num_of_pacients", default: 0
+    t.datetime "created_at",                  null: false
+    t.datetime "updated_at",                  null: false
+  end
+
+  add_index "wards", ["number"], name: "index_wards_on_number", unique: true, using: :btree
+
   add_foreign_key "role_users", "roles"
   add_foreign_key "role_users", "users"
+  add_foreign_key "surveys", "cards"
+  add_foreign_key "surveys", "results"
+  add_foreign_key "surveys", "wards"
 end

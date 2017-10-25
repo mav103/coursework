@@ -1,0 +1,29 @@
+=breadcrumb_tag do
+  %li.active
+    = @card.id
+  %li
+    = link_to 'Карты', cards_path
+  %li
+    Больница
+
+%h1= @Сard_id
+
+%dl
+  %dt= Card.human_attribute_name(:second_name)
+  = @card.second_name
+  %dt= Card.human_attribute_name(:first_name)
+  = @card.first_name
+  %dt= Card.human_attribute_name(:last_name)
+  = @card.last_name
+  %dt= Card.human_attribute_name(:passport)
+  = @card.passport
+  %dt= Card.human_attribute_name(:insurance)
+  = @card.insurance
+  %dt= Card.human_attribute_name(:residence)
+  = @card.residence
+  %dt= Card.human_attribute_name(:created)
+  = @card.created
+  %dt= Card.human_attribute_name(:allergy)
+  = @card.allergy
+  %dt= Card.human_attribute_name(:cart_number)
+  = @card.cart_number
